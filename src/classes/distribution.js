@@ -26,7 +26,7 @@ class Boundaries {
 
 
 class Limits {
-    Boundaries = Boundaries(this);
+    boundaries = Boundaries(this);
     _upper = 0;
     _lower = 0;
 
@@ -64,9 +64,10 @@ export class Class {
     limits = Limits();
     frequency = 0;
 
-    setLimits(lower, upper){
+    setLimits(lower, upper, classes){
         this.limits.lower = lower;
         this.limits.upper = upper;
+        this.classes = classes;
     }
 
     setFrequency(frequency){
@@ -78,13 +79,42 @@ export class Class {
     }
 
     get cumulativeFrequency() {
-
+        cumulative = 0;
+        this.classes.classes.forEach(x => {
+            if(x != this){
+                cumulative += x.frequency;
+            }
+        })
+        return cumulative;
     }
 
     get fx() {
         return this.frequency*this.limits.midpoint;
     }
 
+    get xx(){
+        return Math.abs(this.classes.mean - this.limits.midpoint);
+    }
+
+    get xx2(){
+        return round(Math.pow(this.xx, 2))
+    }
+
+    get xx4(){
+        return round(Math.pow(this.xx, 4))
+    }
+
+    get fxx(){
+        return this.frequency*Math.abs(this.classes.mean - this.limits.midpoint);
+    }
+
+    get fxx2(){
+        return round(Math.pow(this.fxx, 2))
+    }
+
+    get fxx4(){
+        return round(Math.pow(this.fxx, 4))
+    } 
 
 }
 
@@ -98,6 +128,16 @@ class Classes {
         this.classes.push(dataclass);
     }
 
+    setCustomSize(size){
+        this._classSize = size;
+    }
+
+    // Properties
+
+    /**
+     *  Total Frequency (n)
+     *      The sum of all the classes frequency.
+     */
     get totalFrequency(){
         return this.list.length;
     }
@@ -131,39 +171,77 @@ class Classes {
         return limits.upper - limits.lower; 
     }
 
-
-
+    /**
+     *  Mean
+     *      The average of all the data.
+     */
     get mean(){
-        return round((this.totalFrequency), decimals)
+        return round((this.sumOfFx/this.totalFrequency), decimals)
     }
 
+    /**
+     *  Median
+     *      The center of all the data.
+     */
     get median(){
-
+        return this.quartile(2);
     }
+
+    /**
+     *  Mode
+     *      The data with the most occurence.
+     */
+    get mode(){
+        var classes_copy = [...this.classes];
+        const max = classes_copy.reduce((prev, current) => (prev.frequency > current.frequency) ? prev : current, 1);
+        var index = this.findClass({dataclass: max});
+        var d1 = max.frequency - this.classes.at(index-1).frequency;
+        var d2 = max.frequency - this.classes.at(index+1).frequency;
+        return round(max.limits.boundaries.lower + ((d1/(d1+d2))*this.classSize),2)
+    }
+
+    // Quartiles, Deciles and Percentiles and all the neccessary functions.
 
     quartile(q){
-
+        if (q < 1 || q > 4){
+            q = 1;
+        }
+        return this.percentile(q*4);
     }
 
     decile(d){
-
+        if (d < 1 || d > 10){
+            d = 1;
+        }
+        return this.percentile(d*10);
     }
 
     percentile(p){
-
+        var cf_location = (p/100)*this.totalFrequency;
+        var index = findClass({cumulativeFrequency: cf_location})
+        var percentile_class = classes.at(index);
+        var lower_class_cf = 0;
+        if (index != 0) lower_class_cf = percentile_class.cumulativeFrequency;
+        return round(percentile_class.boundaries.lower + ((cf_location-lower_class_cf)/percentile_class.frequency)*this.classSize, 2);
     }
-    
-    setCustomSize(size){
-        this._classSize = size;
+
+    findClass({cumulativeFrequency = 0, dataclass = null, f = 0}){
+        if(cf != 0){
+            this.classes.forEach((x, index) => {
+                if (x.cumulativeFrequency >= cumulativeFrequency){
+                    return index;
+                }
+            })
+        }else
+        if(f!= 0){
+
+        }
+        else if (dataclass != null){
+            this.classes.forEach((x, index) => {
+                if (x >= dataclass){
+                    return index;
+                }
+            })
+        }
     }
-    
-}
-
-
-export class GroupedFrequency {
-    data = []
-    classes = []
-    _classSize;
-
-
 }
