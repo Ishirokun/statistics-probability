@@ -4,6 +4,11 @@ on:
       - main
 name: 🚀 Website deployment on push
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   web-deploy:
     name: 🎉 Deploy
