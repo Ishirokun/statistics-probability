@@ -25,6 +25,8 @@ function App() {
       switch(selectedTab){
         case 0:
           return <Grouped/>
+        default:
+          return <br/>
       }
   }
 
