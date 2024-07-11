@@ -1,4 +1,10 @@
 import logo from './logo.svg';
+import { useState } from 'react';
+import { createTheme, ThemeProvider, CssBaseline } from '@mui/material';
+import { Box, AppBar, Drawer, Toolbar, Divider } from '@mui/material';
+import { List, ListItem, ListItemButton, ListItemText, ListItemIcon } from '@mui/material';
+import { Analytics } from '@mui/icons-material';
+import { Grouped } from './tabs/grouped';
 import './App.css';
 
 const darkTheme = createTheme({
@@ -9,6 +15,19 @@ const darkTheme = createTheme({
 
 
 function App() {
+  const icons = [<Analytics/>, <Analytics/>]
+
+  const [selectedTab, setTab] = useState(0);
+
+  const drawerWidth = 240;
+
+  function currentTab(){
+      switch(selectedTab){
+        case 0:
+          return <Grouped/>
+      }
+  }
+
   return (
     <ThemeProvider theme={darkTheme}>
     <Box sx={{ display: 'flex' }}>
@@ -32,10 +51,11 @@ function App() {
         <Toolbar />
         <Divider />
         <List>
-          {['Browse', 'Stores', 'Library', 'Wishlist', 'Downloaded'].map((text, index) => (
-            <ListItem key={text} disablePadding onClick={()=>{setSelectedTab(index)}}>
+          {['Frequency Distribution', 'Interests'].map((text, index) => (
+            <ListItem key={text} disablePadding onClick={()=>{}}>
               <ListItemButton>
                 <ListItemIcon>
+                    {icons[index]}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
@@ -49,7 +69,7 @@ function App() {
         sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
       >
         <Toolbar/>
-        <br/>
+        {currentTab()}
       </Box>
     </Box>
     </ThemeProvider>
