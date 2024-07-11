@@ -1,27 +1,58 @@
 import logo from './logo.svg';
 import './App.css';
 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
+
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          Automated deployment on push is working...
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={darkTheme}>
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}>
+      </AppBar>
+      <Drawer
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },
+        }}
+        variant="permanent"
+        anchor="left"
+      >
+        <Toolbar />
+        <Divider />
+        <List>
+          {['Browse', 'Stores', 'Library', 'Wishlist', 'Downloaded'].map((text, index) => (
+            <ListItem key={text} disablePadding onClick={()=>{setSelectedTab(index)}}>
+              <ListItemButton>
+                <ListItemIcon>
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+      </Drawer>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
+      >
+        <Toolbar/>
+        <br/>
+      </Box>
+    </Box>
+    </ThemeProvider>
   );
 }
 
