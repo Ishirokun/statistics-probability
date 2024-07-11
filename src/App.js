@@ -1,4 +1,8 @@
 import logo from './logo.svg';
+import { createTheme, ThemeProvider, CssBaseline } from '@mui/material';
+import { Box, AppBar, Drawer, Toolbar, Divider } from '@mui/material';
+import { List, ListItem, ListItemButton, ListItemText, ListItemIcon } from '@mui/material';
+import { Analytics } from '@mui/icons-material';
 import './App.css';
 
 const darkTheme = createTheme({
@@ -9,6 +13,9 @@ const darkTheme = createTheme({
 
 
 function App() {
+  const icons = [<Analytics/>, <Analytics/>]
+  const drawerWidth = 240;
+
   return (
     <ThemeProvider theme={darkTheme}>
     <Box sx={{ display: 'flex' }}>
@@ -32,10 +39,11 @@ function App() {
         <Toolbar />
         <Divider />
         <List>
-          {['Browse', 'Stores', 'Library', 'Wishlist', 'Downloaded'].map((text, index) => (
-            <ListItem key={text} disablePadding onClick={()=>{setSelectedTab(index)}}>
+          {['Frequency Distribution', 'Interests'].map((text, index) => (
+            <ListItem key={text} disablePadding onClick={()=>{}}>
               <ListItemButton>
                 <ListItemIcon>
+                    {icons[index]}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
